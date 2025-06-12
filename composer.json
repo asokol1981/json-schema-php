@@ -1,0 +1,36 @@
+{
+    "$schema": "https://getcomposer.org/schema.json",
+    "name": "asokol1981/json-schema-php",
+    "type": "project",
+    "description": "A PHP library for generating JSON Schema",
+    "keywords": [
+        "php",
+        "json",
+        "schema"
+    ],
+    "license": "MIT",
+    "require": {
+        "php": ">=8.1"
+    },
+    "require-dev": {
+        "friendsofphp/php-cs-fixer": "^3.75",
+        "phpunit/phpunit": "^10.5.17 || ^11.0.7"
+    },
+    "autoload": {
+        "psr-4": {
+            "ASokol1981\\JsonSchema\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "ASokol1981\\JsonSchema\\Tests\\": "tests/"
+        }
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "preferred-install": "dist",
+        "sort-packages": true
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}

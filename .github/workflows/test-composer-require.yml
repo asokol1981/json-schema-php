@@ -1,0 +1,72 @@
+name: test composer require
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - ".github/workflows/test-composer-require.yml"
+      - ".gitattributes"
+      - "composer.json"
+      - "Makefile"
+  pull_request:
+    branches: [ main ]
+    paths:
+      - ".github/workflows/test-composer-require.yml"
+      - ".gitattributes"
+      - "composer.json"
+      - "Makefile"
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php:
+          - "8.1"
+          - "8.2"
+          - "8.3"
+
+    steps:
+      - name: Checkout (just for context)
+        uses: actions/checkout@v4
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+
+      - name: Create project directory
+        run: mkdir test-project
+
+      - name: Create minimal composer.json
+        working-directory: test-project
+        run: |
+          echo '{
+            "name": "dummy/test-project",
+            "description": "Temporary test project",
+            "require": {}
+          }' > composer.json
+
+      - name: Composer require package
+        working-directory: test-project
+        run: composer require asokol1981/json-schema-php
+
+      - name: Create test.php to validate package functionality
+        working-directory: test-project
+        run: |
+          echo "<?php
+          require __DIR__ . '/vendor/autoload.php';
+          try {
+              if ((new ASokol1981\\Telegram\\Entities\\Html\\Renderer())->render('ok', []) !== 'ok') {
+                  throw new Exception();
+              }
+          } catch (Throwable \$e) {
+              echo 'Render test failed: ' . \$e->getMessage() . PHP_EOL;
+              exit(1);
+          }
+          echo 'Render test passed.' . PHP_EOL;
+          " > test.php
+
+      - name: Run smoke test
+        working-directory: test-project
+        run: php test.php
