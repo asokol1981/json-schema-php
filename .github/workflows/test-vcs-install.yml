@@ -19,7 +19,7 @@ on:
       - "README.md"
 
 jobs:
-  test:
+  install:
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -69,14 +69,14 @@ jobs:
           echo "<?php
           require __DIR__ . '/vendor/autoload.php';
           try {
-              if ((new ASokol1981\\Telegram\\Entities\\Html\\Renderer())->render('ok', []) !== 'ok') {
+              if ((new ASokol1981\\JsonSchema\\Draft07\\StringSchema())->toArray() !== ['type' => 'string']) {
                   throw new Exception();
               }
           } catch (Throwable \$e) {
-              echo 'Render test failed: ' . \$e->getMessage() . PHP_EOL;
+              echo 'Smoke test failed: ' . \$e->getMessage() . PHP_EOL;
               exit(1);
           }
-          echo 'Render test passed.' . PHP_EOL;
+          echo 'Smoke test passed.' . PHP_EOL;
           " > test.php
 
       - name: Run smoke test
